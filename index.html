@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plunder Yield Calculator - Last War</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/style.min.css">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,20 +34,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="assets/js/script.min.js" defer></script>
-
-    <style>
-        /* Hide native number input arrows */
-        
-        input[type='number']::-webkit-inner-spin-button,
-        input[type='number']::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        
-        input[type='number'] {
-            -moz-appearance: textfield;
-        }
-    </style>
 </head>
 
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 flex flex-col justify-between font-sans antialiased">
@@ -110,28 +101,48 @@
             </div>
         </div>
 
-        <div class="base-card bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative" data-base="1">
+        <!-- Plunderer Targets Main Container -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative">
+
+            <!-- Header with Title and Mobile Controls -->
             <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
                 <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
                     <i data-lucide="boxes" class="w-5 h-5 text-sky-500"></i> Plunder Targets
                 </h2>
-            </div>
 
-            <!-- Grid of 3 Bases -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Navigation Controls (Visible only on mobile: md:hidden) -->
+                <div class="flex md:hidden items-center gap-2">
 
-                <!-- Base 1 -->
-                <div class="base-card bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative" data-base="1">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-sky-500 flex items-center gap-1.5">
-                        <i data-lucide="radar" class="w-4 h-4"></i> Target 1
-                    </span>
-                        <button type="button" class="btn-clear-base text-slate-400 hover:text-rose-500 transition-colors p-1" title="Clear">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+                    <!-- Dot indicators -->
+                    <div class="flex gap-1.5 mr-2">
+                        <span class="target-dot w-2 h-2 rounded-full bg-sky-500 transition-all"></span>
+                        <span class="target-dot w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 transition-all"></span>
+                        <span class="target-dot w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 transition-all"></span>
                     </div>
 
-                    <!-- Nick & Coords -->
+                    <button type="button" id="prev-target-btn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+                    <button type="button" id="next-target-btn" class="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+                </div>
+            </div>
+
+            <!-- Grid / Slider Container -->
+            <div id="targets-slider-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Base 1 -->
+                <div class="base-card target-slide bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative" data-base="1">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-sky-500 flex items-center gap-1.5">
+                    <i data-lucide="radar" class="w-4 h-4"></i> Target 1
+                </span>
+                        <button type="button" class="btn-clear-base text-slate-400 hover:text-rose-500 transition-colors p-1" title="Clear">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+                    </div>
+
                     <div class="space-y-3">
                         <div>
                             <label class="block text-xs font-medium mb-1 text-slate-600 dark:text-slate-400">Commander Name</label>
@@ -149,56 +160,49 @@
                         </div>
                     </div>
 
-                    <!-- Resources -->
                     <div class="space-y-2.5 pt-1">
-
-                        <!-- Iron -->
                         <div>
                             <label class="block text-[11px] font-medium text-slate-500 mb-1">Iron</label>
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b1-iron-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b1-iron-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
-
-                        <!-- Food -->
                         <div>
                             <label class="block text-[11px] font-medium text-slate-500 mb-1">Food</label>
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b1-food-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b1-food-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
-
-                        <!-- Gold -->
                         <div>
                             <label class="block text-[11px] font-medium text-slate-500 mb-1">Gold</label>
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b1-gold-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b1-gold-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Base 2 -->
-                <div class="base-card bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative" data-base="2">
+                <div class="base-card target-slide bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative hidden md:block" data-base="2">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-500 flex items-center gap-1.5">
-                        <i data-lucide="radar" class="w-4 h-4"></i> Target 2
-                    </span>
+                    <i data-lucide="radar" class="w-4 h-4"></i> Target 2
+                </span>
                         <button type="button" class="btn-clear-base text-slate-400 hover:text-rose-500 transition-colors p-1" title="Clear">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
                     </div>
 
                     <div class="space-y-3">
@@ -224,9 +228,9 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b2-iron-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b2-iron-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                         <div>
@@ -234,9 +238,9 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b2-food-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b2-food-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                         <div>
@@ -244,23 +248,23 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b2-gold-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b2-gold-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Base 3 -->
-                <div class="base-card bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative" data-base="3">
+                <div class="base-card target-slide bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 relative hidden md:block" data-base="3">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-emerald-500 flex items-center gap-1.5">
-                        <i data-lucide="radar" class="w-4 h-4"></i> Target 3
-                    </span>
+                    <i data-lucide="radar" class="w-4 h-4"></i> Target 3
+                </span>
                         <button type="button" class="btn-clear-base text-slate-400 hover:text-rose-500 transition-colors p-1" title="Clear">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
                     </div>
 
                     <div class="space-y-3">
@@ -286,9 +290,9 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b3-iron-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b3-iron-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                         <div>
@@ -296,9 +300,9 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b3-food-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b3-food-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                         <div>
@@ -306,9 +310,9 @@
                             <div class="input-wrapper flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
                                 <input type="number" step="any" id="b3-gold-val" placeholder="0.0" class="num-input w-full px-2 py-1.5 bg-transparent text-xs font-mono outline-none text-center">
                                 <select id="b3-gold-unit" class="bg-slate-100 dark:bg-slate-800 px-2 text-xs font-semibold outline-none border-l border-slate-200 dark:border-slate-700">
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                            </select>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                        </select>
                             </div>
                         </div>
                     </div>
